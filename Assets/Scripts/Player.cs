@@ -157,13 +157,15 @@ public class Player : MonoBehaviour
         lr.SetPosition(1, second_hit_object_position);
         
         
-        if (first_hit_object.collider.GetComponent<ElectricalProperties>() != null && second_hit_object.collider.GetComponent<ElectricalProperties>() != null) {
+        if (first_hit_object.collider.GetComponent<ElectricalProperties>() != null && second_hit_object.collider.GetComponent<ElectricalProperties>() != null) { // only if both objects have electrical properties
             Debug.Log("Both objects have electrical properties. A connection is valid.");
             myLine.AddComponent<ConnectionInformation>();
-            myLine.GetComponent<ConnectionInformation>().InitializeConnections(first_hit_object, second_hit_object); //Attach the object information to the line to be able to retrieve it later
-            connected_lines.Add(myLine);
+            myLine.GetComponent<ConnectionInformation>().InitializeConnections(first_hit_object, second_hit_object); // attach the object information to the line to be able to retrieve it later
+            
+            connected_lines.Add(myLine); // add the current line to the connected lines 
+
             InformHUDAboutNewConnectedObjects();
-        } else {
+        } else { // in the case user tries to connect objects without electrical properties
             Debug.Log("One or more objects do not have electrical properties. A connection is invalid. Deleting in 3 seconds.");
             GameObject.Destroy(myLine, 3f); //10 seconds duration
         }
@@ -171,15 +173,15 @@ public class Player : MonoBehaviour
         
     }
     private void InformHUDAboutNewConnectedObjects() {
-        string bat_info = first_hit_object.collider.GetComponent<ElectricalProperties>().PrettyPrintDataSheet();
-        float voltage = first_hit_object.collider.GetComponent<ElectricalProperties>().potential - second_hit_object.collider.GetComponent<ElectricalProperties>().potential;
+        string bat_info = first_hit_object.collider.GetComponent<ElectricalProperties>().PrettyPrintDataSheet();  // battery information will be printed from the first object that was touched. 
+        float voltage =  GetVoltageFromConnectedObjects();// calculate the potential difference between two batteries
         Debug.Log(bat_info);
 
-        GameObject player_hud_battery_info = GameObject.Find("BatteryInformationText");
-        player_hud_battery_info.GetComponent<UpdateHUDtext>().RefreshInfo(bat_info);
+        GameObject player_hud_battery_info = GameObject.Find("BatteryInformationText"); // get player HUD for battery info
+        player_hud_battery_info.GetComponent<UpdateHUDtext>().RefreshInfo(bat_info); // update its text
 
-        GameObject player_hud_multimeter = GameObject.Find("MeasuredVoltageText");
-        player_hud_multimeter.GetComponent<UpdateHUDtext>().RefreshInfo(PrettyPrintThisVoltage(voltage));
+        GameObject player_hud_multimeter = GameObject.Find("MeasuredVoltageText"); // get player HUD for the multimeter
+        player_hud_multimeter.GetComponent<UpdateHUDtext>().RefreshInfo(PrettyPrintThisVoltage(voltage)); // update its text
     }
 
     private string PrettyPrintThisVoltage(float v) {
@@ -187,5 +189,9 @@ public class Player : MonoBehaviour
         output += v + " V \n";
         
         return output;
+    }
+
+    private float GetVoltageFromConnectedObjects() {
+        return first_hit_object.collider.GetComponent<ElectricalProperties>().GetPotential() - second_hit_object.collider.GetComponent<ElectricalProperties>().GetPotential();
     }
 }

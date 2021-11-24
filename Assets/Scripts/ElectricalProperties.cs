@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ElectricalProperties : MonoBehaviour
 {
-    public float potential;
+    [SerializeField] float potential;
     public float capacity;
     public string manufacturer;
     public float soc;
@@ -41,4 +41,9 @@ public class ElectricalProperties : MonoBehaviour
     public int GetParentId() {
         return parentID;
     }
+
+    public float GetPotential() {
+        return potential;
+    }
+
 }
