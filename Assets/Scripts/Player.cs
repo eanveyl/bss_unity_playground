@@ -166,7 +166,7 @@ public class Player : MonoBehaviour
 
             InformHUDAboutNewConnectedObjects();
         } else { // in the case user tries to connect objects without electrical properties
-            Debug.Log("One or more objects do not have electrical properties. A connection is invalid. Deleting in 3 seconds.");
+            Debug.LogWarning("One or more objects do not have electrical properties. A connection is invalid. Deleting in 3 seconds.");
             GameObject.Destroy(myLine, 3f); //10 seconds duration
         }
         
@@ -174,7 +174,7 @@ public class Player : MonoBehaviour
     }
     private void InformHUDAboutNewConnectedObjects() {
         string bat_info = first_hit_object.collider.GetComponent<ElectricalProperties>().PrettyPrintDataSheet();  // battery information will be printed from the first object that was touched. 
-        float voltage =  GetVoltageFromConnectedObjects();// calculate the potential difference between two batteries
+        float voltage =  GetVoltageFromConnectedObjects();// calculate the potential difference between two touched objects
         Debug.Log(bat_info);
 
         GameObject player_hud_battery_info = GameObject.Find("BatteryInformationText"); // get player HUD for battery info

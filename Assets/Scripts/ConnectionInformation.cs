@@ -23,10 +23,12 @@ public class ConnectionInformation : MonoBehaviour
     public void InitializeConnections(RaycastHit first, RaycastHit second) {
         first_object = first;
         second_object = second;
-        if (first_object.collider.GetComponent<GameObject>().transform.parent.GetInstanceID() == second_object.collider.GetComponent<GameObject>().transform.parent.GetInstanceID()) { //the connection is inside the same battery
+        //if (first_object.collider.GetComponent<GameObject>().transform.parent.GetInstanceID() == second_object.collider.GetComponent<GameObject>().transform.parent.GetInstanceID()) { //the connection is inside the same battery
+        if (first_object.collider.GetComponent<ElectricalProperties>().transform.parent.GetInstanceID() == second_object.collider.GetComponent<ElectricalProperties>().transform.parent.GetInstanceID()) {
             has_same_parent = true;
         } else {
             has_same_parent = false;
         }
+        
     }
 }
