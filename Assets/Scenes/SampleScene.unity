@@ -946,13 +946,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4254468632fe96646950c960980581c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  potential: 1.5
   capacity: 40
   manufacturer: ACME Inc.
   soc: 30
   charging: 0
+  is_cathode: 0
   r_ohm: 1
-  act_elec_a: 0.4
 --- !u!136 &822078937
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1401,9 +1400,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a692a6cc89f7f64e90cc17223873ef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force_original_butler_volmer: 1
-  threshold_butler_volmer: 10
-  r_chargetransfer: 1
+  F: 96485
+  R: 8.314
+  temperature: 293.15
+  current: 3
+  area: 0.01
+  currentDensity: 0.1
+  z: 1
+  alpha: 0.5
 --- !u!1 &1077663221
 GameObject:
   m_ObjectHideFlags: 0
@@ -1450,13 +1454,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4254468632fe96646950c960980581c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  potential: 1.1
   capacity: 0
   manufacturer: 
   soc: 0
   charging: 0
+  is_cathode: 0
   r_ohm: 0
-  act_elec_a: 0.4
 --- !u!136 &1077663224
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2380,13 +2383,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4254468632fe96646950c960980581c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  potential: 0
   capacity: 0
   manufacturer: 
   soc: 0
   charging: 0
+  is_cathode: 0
   r_ohm: 0
-  act_elec_a: 0.4
 --- !u!1 &1816588252
 GameObject:
   m_ObjectHideFlags: 0
@@ -2496,13 +2498,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4254468632fe96646950c960980581c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  potential: 5.5
   capacity: 40
   manufacturer: YoMamaIsFat
   soc: 69
   charging: 0
+  is_cathode: 1
   r_ohm: 1
-  act_elec_a: 0.4
 --- !u!1 &1825225627
 GameObject:
   m_ObjectHideFlags: 0

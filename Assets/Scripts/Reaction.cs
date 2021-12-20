@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Reaction : MonoBehaviour
+public class Reaction //: MonoBehaviour
 {
-    [SerializeField] string Anode;
-    [SerializeField] string Cathode;
+    private string Anode;
+    private string Cathode;
     private List<Element> Products;
     private List<Element> Reactants;
 

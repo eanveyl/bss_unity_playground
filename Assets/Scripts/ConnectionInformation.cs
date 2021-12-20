@@ -8,6 +8,7 @@ public class ConnectionInformation : MonoBehaviour
     private RaycastHit second_object;
 
     public bool has_same_parent;
+    
     // Start is called before the first frame update
     void Start()
     {

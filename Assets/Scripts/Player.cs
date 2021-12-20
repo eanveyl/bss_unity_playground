@@ -192,6 +192,23 @@ public class Player : MonoBehaviour
     }
 
     private float GetVoltageFromConnectedObjects() {
-        return first_hit_object.collider.GetComponent<ElectricalProperties>().GetPotential() - second_hit_object.collider.GetComponent<ElectricalProperties>().GetPotential();
+        float v1 = first_hit_object.collider.GetComponent<ElectricalProperties>().GetPotential();
+        float v2 = second_hit_object.collider.GetComponent<ElectricalProperties>().GetPotential();
+    /*
+        if (connected_lines[connected_lines.Count-1].GetComponent<ConnectionInformation>().has_same_parent) {
+            v2 = 0; //this is a quick fix to prevent the potential to be subtracted twice from the same battery. Because both "anode" and 
+            //"cathode" have the same methods, they deliver basically the same potential so that when they get substracted from each other (v1-v2) 
+            //they cancel each other out. That is why to prevent substracting the same value from each other, we set the second value (v2) to =0.
+        } else {
+            v2 =  //in the case that the second object we are touching is not
+            //on the same battery, we may consider its potential. 
+            //TODO: is this correct if we are touching the minus pole on the other battery? would we really still measure 
+        }
+    */
+            
+        Debug.Log("v1 =" + v1.ToString());
+        Debug.Log("v2 =" + v2.ToString());
+        return v1 - v2;
+
     }
 }

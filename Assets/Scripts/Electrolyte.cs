@@ -13,22 +13,16 @@ public class Electrolyte : MonoBehaviour
     */
     [SerializeField] float F = 96485f; // [C/mol]
     [SerializeField] float R = 8.314f; // [J/mol*K]
-    [SerializeField] float temprature = 0f;
-    [SerializeField] float current = 0f;
-    [SerializeField] float area = 0f;
-    [SerializeField] float currentDensity = 0f;
-    [SerializeField] float z = 1f;
+    [SerializeField] float temperature = 293.15f; //20°C
+    [SerializeField] float current; //TODO: on what does this value depend?
+    [SerializeField] float area = 0.01f; 
+    [SerializeField] float currentDensity; //TODO: dependency of this value? 
+    [SerializeField] float z; //TODO: default value here?
     [SerializeField] float alpha = 0.5f;
-
-    private Element e;
-    private Reaction r;
-
-
-    //implemted functions
 
 
     //Gibbsche free energy
-    public float GetDeltaG() { 
+    public float GetDeltaG() { //TODO: do we need this function if we have the calculateDeltaG() method?
         return 42.0f; 
     }
 
@@ -36,63 +30,43 @@ public class Electrolyte : MonoBehaviour
         return z; 
     }
 
-    public float GetTemprature()
+    public float GetTemperature()
     {
-        return temprature;
+        return temperature;
     }
 
     public float GetCurrent() {
-            return current;
-        }
+        return current;
+    }
 
     public float GetArea() {
-            return area;
-        }
+        return area;
+    }
 
     public float GetCurrentDensity() {
-            return currentDensity;
-        }
+        return currentDensity;
+    }
 
     public float GetAlpha() {
-            return alpha;
-        }
+        return alpha;
+    }
 
 
     //calculates deltaU
     public float deltaU() {
 
-        float z = GetZ();
-        float T = GetTemprature();
-        float I = GetCurrent();
-        float A = GetArea();
-        float j_0 = GetCurrentDensity();
-        float alpha = GetAlpha();
-
-
-        //approximation for small currents
-
-        if (I < 1) {
-                return (R * T) / (z * F) * (current / A * j_0);
+        if (current < 1) { //approximation for small currents
+            return (R * temperature) / (z * F) * (current / area * currentDensity);
         } else { //approximation for large currents
-                float argument = Mathf.Abs(current / (A * j_0));
-                return (((R * T) / (alpha * z * F))) * Mathf.Log(argument, 2.71f);
+            float argument = Mathf.Abs(current / (area * currentDensity));
+            return (((R * temperature) / (alpha * z * F))) * Mathf.Log(argument, 2.71f);
         }
 
     }
 
-
     //calculate UReaction
-
     public float I_Butt() {
-
-            float z = GetZ(); //TODO: remove these variable assignments
-            float T = GetTemprature();
-            float I = GetCurrent();
-            float A = GetArea();
-            float j_0 = GetCurrentDensity();
-            float alpha = GetAlpha();
-
-            return A*j_0*(Mathf.Exp((alpha*z*F*deltaU())/R*T)-Mathf.Exp((-1)*((1-alpha)*z*F)/R*T*deltaU()));
+        return area*currentDensity*(Mathf.Exp((alpha*z*F*deltaU())/R*temperature)-Mathf.Exp((-1)*((1-alpha)*z*F)/R*temperature*deltaU()));
     }
 
     public float UReaction()
@@ -100,12 +74,6 @@ public class Electrolyte : MonoBehaviour
         float I = GetCurrent();
         return deltaU() / I_Butt() * I;
     }
-  
-
-
-    //calculate OSV
-    //_____________
-
 
     //takes a list of Products, returns the sum of theor G_0 value
     public float sumReactionProducts(List<Element> element)
@@ -132,21 +100,18 @@ public class Electrolyte : MonoBehaviour
        
     }
 
-
-
-
     //takes a reaction and gets the list of Reactants/Producuts for the sumX functions
     public float calculateDeltaG(Reaction reaction)
     {
-        return sumReactionProducts(reaction.getProducts()) - sumReactionReactants(reaction.getReactants());          
+        float total = sumReactionProducts(reaction.getProducts()) - sumReactionReactants(reaction.getReactants());
+        Debug.Log("delta_g =" + total.ToString());
+        return total;          
     }
 
     public float CalculateOSV(Reaction reaction)
     {
         return -1 * calculateDeltaG(reaction) / z * F;
     }
-
-    //______________________________________________________________________________________
 
     void Start()
     {

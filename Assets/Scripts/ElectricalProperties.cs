@@ -4,22 +4,27 @@ using UnityEngine;
 
 public class ElectricalProperties : MonoBehaviour
 {
-    [SerializeField] float potential;
-    [SerializeField] float capacity; //capacity of the battery in Ah
+    [SerializeField] float capacity; //capacity of the battery in Ah 
     [SerializeField] string manufacturer;
     [SerializeField] float soc;
     [SerializeField] bool charging;
+    [SerializeField] bool is_cathode;
     [SerializeField] float r_ohm = 1; //represents the resistance of the contacts in Ohm TODO: what would be a logical default value for this?
-    [SerializeField] float act_elec_a = 0.4f; //the active electrode area (for the butler volmer equation) TODO: what is a logical value for this? can we initialize it depending on the real dimensions of the electrode?
+    //[SerializeField] float act_elec_a = 0.4f; //the active electrode area (for the butler volmer equation) TODO: what is a logical value for this? can we initialize it depending on the real dimensions of the electrode?
     private int parentID;
     private List<Element> availableChemicalElements = new List<Element>();
     public static Element Pb, PbO2, PbSO4, H_plus, HSO4, H2O, H2SO4; //declare the elements as GLOBAL variables (easier to access them everywhere)
+    private Reaction object_reaction;
 
     // Start is called before the first frame update
     void Start()
     {
         parentID = this.transform.parent.GetInstanceID(); //does what you think it does ;) in order to recognize which pole corresponds to which battery
         InitializeDefaultChemicalElements(); //initializes the chemical elements that can be used
+        
+        List<Element> dummy_reactant_list = new List<Element>(){Pb, PbO2, HSO4, HSO4, H_plus, H_plus}; //TODO: this is just a dummy list for TESTING
+        List<Element> dummy_product_list = new List<Element>(){PbSO4, PbSO4, H2O, H2O}; //TODO: this is just a dummy list for TESTING
+        Reaction object_reaction = new Reaction("dummy1", "dummy2", dummy_reactant_list, dummy_product_list);
     } 
 
     // Update is called once per frame
@@ -70,31 +75,42 @@ public class ElectricalProperties : MonoBehaviour
         if (!HasElectrolyte()) {
             Debug.LogWarning("No Electrolyte class connected to this battery chassis!");
         }
-        return CalcUGleichgewicht() + CalcUWiderstand() + CalcUReaktion() + CalcUDiffusion();
+
+        if (is_cathode) {
+            return CalcUGleichgewicht() + CalcUWiderstand() + CalcUReaktion() + CalcUDiffusion(); //only if we touch the cathode (plus pole) 
+            //... we return the potential
+        } else {
+            return 0; //in the case this object is actually the anode (minus pole)
+        }
+        
     }
 
     public float CalcUGleichgewicht() {
-        return -1 * this.transform.parent.GetComponent<Electrolyte>().GetDeltaG() / (this.transform.parent.GetComponent<Electrolyte>().GetZ() * 96485); //U_o = - deltaG / (z * F) //TODO: wouldn't it be better to calculate this inside the Electrolyte class?
+        float u_gleichgewicht = -1 * this.transform.parent.GetComponent<Electrolyte>().GetDeltaG() / (this.transform.parent.GetComponent<Electrolyte>().GetZ() * 96485); //U_o = - deltaG / (z * F) //TODO: wouldn't it be better to calculate this inside the Electrolyte class?
+        Debug.Log("u_gleichgewicht = " + u_gleichgewicht.ToString());
+        return u_gleichgewicht;
     }
 
     public float CalcUWiderstand() {
-        return GetCurrentNow() * r_ohm; //resistance losses proportional to the current passing through the battery and the resistance of the contacts
+        float u_widerstand = GetCurrentNow() * r_ohm; //resistance losses proportional to the current passing through the battery and the resistance of the contacts
+        Debug.Log("u_widerstand = " + u_widerstand.ToString());
+        return u_widerstand;
     }
 
-    public float CalcUReaktion() {
-        List<Element> dummy_reactant_list = new List<Element>(){Pb, PbO2, HSO4, HSO4, H_plus, H_plus}; //TODO: this is just a dummy list for TESTING
-        List<Element> dummy_product_list = new List<Element>(){PbSO4, PbSO4, H2O, H2O}; //TODO: this is just a dummy list for TESTING
-        Reaction reaction1 = new Reaction("dummy1", "dummy2", dummy_reactant_list, dummy_product_list);
-        
-        return this.transform.parent.GetComponent<Electrolyte>().CalculateOSV(reaction1);
+    public float CalcUReaktion() {        
+        float u_reaction = this.transform.parent.GetComponent<Electrolyte>().CalculateOSV(object_reaction);
+        Debug.Log("u_reaction = " + u_reaction.ToString());
+        return u_reaction;
     }
 
-    public float CalcUDiffusion () {
-        return 2.3f; //TODO: implement this formula inside the Electrolyte class!
+    public float CalcUDiffusion () { //TODO: implement this formula inside the Electrolyte class!
+        float u_diffusion = 2.3f;
+        Debug.Log("u_difussion = " + u_diffusion.ToString());
+        return u_diffusion;
     }
 
     public float GetCurrentNow() { //fetch the current flowing through the battery in this time (now)
-        return 10.0f; //TODO: from what does the current depend?
+        return this.transform.parent.GetComponent<Electrolyte>().GetCurrent(); //TODO: from what does the current depend? //TODO: implement the resistance of the connection (ray)
     }
 
     public bool HasElectrolyte() {

@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Element : MonoBehaviour
+public class Element //: MonoBehaviour
 {
-    private string Reactant = "";
-    private float H_0 = 0 ;
-    private float G_0 = 0;
-    private float MoleWeight = 0;
-    private float MoleVolume = 0;
-    private float Density = 0;
-    private float Conductivity = 0;
-    private float ThermalCapacity = 0;
-    private int Index = 0;
+    private string Reactant;
+    private float H_0;
+    private float G_0;
+    private float MoleWeight;
+    private float MoleVolume;
+    private float Density;
+    private float Conductivity;
+    private float ThermalCapacity;
+    private int Index;
 
     public Element(string reactant, float h_0, float g_0, float moleWeight, float moleVolume, float density, float conductivity, float thermalCapacity, int index)
     {
