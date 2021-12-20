@@ -13,7 +13,6 @@ public class Electrolyte : MonoBehaviour
     */
     [SerializeField] float F = 96485f; // [C/mol]
     [SerializeField] float R = 8.314f; // [J/mol*K]
-    
     [SerializeField] float temprature = 0f;
     [SerializeField] float current = 0f;
     [SerializeField] float area = 0f;
@@ -72,20 +71,13 @@ public class Electrolyte : MonoBehaviour
 
         //approximation for small currents
 
-        if (I < 1)
-        {
+        if (I < 1) {
                 return (R * T) / (z * F) * (current / A * j_0);
+        } else { //approximation for large currents
+                float argument = Mathf.Abs(current / (A * j_0));
+                return (((R * T) / (alpha * z * F))) * Mathf.Log(argument, 2.71f);
         }
 
-        //approximation for large currents
-
-        else {
-            float argument = Mathf.Abs(current / (A * j_0));
-            return (((R * T) / (alpha * z * F))) * Mathf.Log(argument, 2.71f);
-        }
-
-        
-     
     }
 
 
@@ -93,22 +85,21 @@ public class Electrolyte : MonoBehaviour
 
     public float I_Butt() {
 
-            float z = GetZ();
+            float z = GetZ(); //TODO: remove these variable assignments
             float T = GetTemprature();
             float I = GetCurrent();
             float A = GetArea();
             float j_0 = GetCurrentDensity();
             float alpha = GetAlpha();
 
-
             return A*j_0*(Mathf.Exp((alpha*z*F*deltaU())/R*T)-Mathf.Exp((-1)*((1-alpha)*z*F)/R*T*deltaU()));
     }
 
-    public float UReaction()       
-        {
-            float I = GetCurrent();
-            return deltaU() / I_Butt() * I;
-        }
+    public float UReaction()
+    {
+        float I = GetCurrent();
+        return deltaU() / I_Butt() * I;
+    }
   
 
 
@@ -117,25 +108,25 @@ public class Electrolyte : MonoBehaviour
 
 
     //takes a list of Products, returns the sum of theor G_0 value
-    public float sumReactionProducts(params Element[] element)
+    public float sumReactionProducts(List<Element> element)
     {
 
         float tempSum = 0;
-        for (int i = 0; i < element.Length; i++)
+        for (int i = 0; i < element.Count; i++)
         {
-           tempSum += e.getG_0(element[i]);
+           tempSum += element[i].getG_0();
         }
         return tempSum;
     }
 
     //takes a list of Reactants, returns the sum of their G_0 value
-    public float sumReactionReactants(params Element[] element)
+    public float sumReactionReactants(List<Element> element)
     {
 
         float tempSum = 0;
-        for (int i = 0; i < element.Length; i++)
+        for (int i = 0; i < element.Count; i++)
         {
-            tempSum += e.getG_0(element[i]);
+            tempSum += element[i].getG_0();
         }
         return tempSum;
        
@@ -147,13 +138,10 @@ public class Electrolyte : MonoBehaviour
     //takes a reaction and gets the list of Reactants/Producuts for the sumX functions
     public float calculateDeltaG(Reaction reaction)
     {
-        Element[] Reactants = reaction.getReactants();
-        Element[] Products = reaction.getProducts();
-
-        return sumReactionProducts(Products) - sumReactionReactants(Reactants);          
+        return sumReactionProducts(reaction.getProducts()) - sumReactionReactants(reaction.getReactants());          
     }
 
-    public float calculateOSV(Reaction reaction)
+    public float CalculateOSV(Reaction reaction)
     {
         return -1 * calculateDeltaG(reaction) / z * F;
     }
@@ -162,7 +150,7 @@ public class Electrolyte : MonoBehaviour
 
     void Start()
     {
-        calculateOSV(r.PbPbO2);
+        
     }
 
     // Update is called once per frame
