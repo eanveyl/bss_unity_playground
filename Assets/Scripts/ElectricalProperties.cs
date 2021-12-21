@@ -24,7 +24,7 @@ public class ElectricalProperties : MonoBehaviour
         
         List<Element> dummy_reactant_list = new List<Element>(){Pb, PbO2, HSO4, HSO4, H_plus, H_plus}; //TODO: this is just a dummy list for TESTING
         List<Element> dummy_product_list = new List<Element>(){PbSO4, PbSO4, H2O, H2O}; //TODO: this is just a dummy list for TESTING
-        Reaction object_reaction = new Reaction("dummy1", "dummy2", dummy_reactant_list, dummy_product_list);
+        object_reaction = new Reaction("dummy1", "dummy2", dummy_reactant_list, dummy_product_list);
     } 
 
     // Update is called once per frame
