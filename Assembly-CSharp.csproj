@@ -36,14 +36,15 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\ElectricalProperties.cs" />
      <Compile Include="Assets\Scripts\ConnectionInformation.cs" />
      <Compile Include="Assets\Scripts\Player.cs" />
-     <Compile Include="Assets\Scripts\Reaction.cs" />
-     <Compile Include="Assets\Scripts\Electrolyte.cs" />
+     <Compile Include="Assets\Scripts\Molecule.cs" />
+     <Compile Include="Assets\Scripts\Ground.cs" />
      <Compile Include="Assets\Scripts\UpdateHUDtext.cs" />
+     <Compile Include="Assets\Scripts\Resistor.cs" />
+     <Compile Include="Assets\Scripts\PbH2SO4.cs" />
      <Compile Include="Assets\Scripts\MouseLook.cs" />
-     <Compile Include="Assets\Scripts\Element.cs" />
+     <Compile Include="Assets\Scripts\ElectricalComponent.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.21f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

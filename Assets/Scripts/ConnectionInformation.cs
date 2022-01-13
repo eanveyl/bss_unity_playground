@@ -21,13 +21,15 @@ public class ConnectionInformation : MonoBehaviour
         
     }
 
+    //broken function, consider removing
     public void InitializeConnections(RaycastHit first, RaycastHit second) {
         first_object = first;
         second_object = second;
-        //if (first_object.collider.GetComponent<GameObject>().transform.parent.GetInstanceID() == second_object.collider.GetComponent<GameObject>().transform.parent.GetInstanceID()) { //the connection is inside the same battery
-        if (first_object.collider.GetComponent<ElectricalProperties>().transform.parent.GetInstanceID() == second_object.collider.GetComponent<ElectricalProperties>().transform.parent.GetInstanceID()) {
+        if (first_object.collider.GetComponentInParent<ElectricalComponent>().transform.parent.GetInstanceID() == second_object.collider.GetComponentInParent<ElectricalComponent>().transform.parent.GetInstanceID())
+        {
             has_same_parent = true;
-        } else {
+        }
+        else {
             has_same_parent = false;
         }
         

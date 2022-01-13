@@ -189,6 +189,116 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &165089353
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 165089358}
+  - component: {fileID: 165089357}
+  - component: {fileID: 165089356}
+  - component: {fileID: 165089355}
+  - component: {fileID: 165089354}
+  m_Layer: 0
+  m_Name: Cylinder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &165089354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165089353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 224cf004834344771ada06cdaa2af2ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Resistance: 42
+--- !u!136 &165089355
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165089353}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.5000001
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!23 &165089356
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165089353}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &165089357
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165089353}
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &165089358
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165089353}
+  m_LocalRotation: {x: -0, y: -0, z: 0.7175463, w: 0.69651085}
+  m_LocalPosition: {x: 5.58, y: 0.33, z: -1.7084606}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 91.705}
 --- !u!1 &294684672
 GameObject:
   m_ObjectHideFlags: 0
@@ -912,7 +1022,6 @@ GameObject:
   - component: {fileID: 822078939}
   - component: {fileID: 822078938}
   - component: {fileID: 822078937}
-  - component: {fileID: 822078936}
   m_Layer: 0
   m_Name: PlusPole
   m_TagString: Untagged
@@ -934,24 +1043,6 @@ Transform:
   m_Father: {fileID: 1856429147}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &822078936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 822078934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4254468632fe96646950c960980581c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  capacity: 40
-  manufacturer: ACME Inc.
-  soc: 30
-  charging: 0
-  is_cathode: 0
-  r_ohm: 1
 --- !u!136 &822078937
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1302,7 +1393,6 @@ GameObject:
   - component: {fileID: 1028253546}
   - component: {fileID: 1028253545}
   - component: {fileID: 1028253544}
-  - component: {fileID: 1028253548}
   m_Layer: 0
   m_Name: BatteryBody1
   m_TagString: Untagged
@@ -1388,26 +1478,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1028253548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1028253543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a692a6cc89f7f64e90cc17223873ef4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  F: 96485
-  R: 8.314
-  temperature: 293.15
-  current: 3
-  area: 0.01
-  currentDensity: 0.1
-  z: 1
-  alpha: 0.5
 --- !u!1 &1077663221
 GameObject:
   m_ObjectHideFlags: 0
@@ -1420,7 +1490,6 @@ GameObject:
   - component: {fileID: 1077663226}
   - component: {fileID: 1077663225}
   - component: {fileID: 1077663224}
-  - component: {fileID: 1077663223}
   m_Layer: 0
   m_Name: MinusPole
   m_TagString: Untagged
@@ -1442,24 +1511,6 @@ Transform:
   m_Father: {fileID: 1856429147}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1077663223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1077663221}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4254468632fe96646950c960980581c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  capacity: 0
-  manufacturer: 
-  soc: 0
-  charging: 0
-  is_cathode: 0
-  r_ohm: 0
 --- !u!136 &1077663224
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -2380,15 +2431,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1784704473}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4254468632fe96646950c960980581c6, type: 3}
+  m_Script: {fileID: 11500000, guid: 882966d8740e340edbc66ac40ba5a83c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  capacity: 0
-  manufacturer: 
-  soc: 0
-  charging: 0
-  is_cathode: 0
-  r_ohm: 0
 --- !u!1 &1816588252
 GameObject:
   m_ObjectHideFlags: 0
@@ -2495,15 +2540,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1816588252}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4254468632fe96646950c960980581c6, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a13ca9457148452bbd3fb4203edbbec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  capacity: 40
-  manufacturer: YoMamaIsFat
-  soc: 69
-  charging: 0
-  is_cathode: 1
-  r_ohm: 1
 --- !u!1 &1825225627
 GameObject:
   m_ObjectHideFlags: 0

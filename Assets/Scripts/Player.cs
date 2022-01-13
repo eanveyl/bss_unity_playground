@@ -14,11 +14,14 @@ public class Player : MonoBehaviour
     private RaycastHit second_hit_object;
     [SerializeField] Material my_line_material;
     private List<GameObject> connected_lines = new List<GameObject>();
+    private float F = 96485f; // [C/mol]
+    private float R = 8.314f; // [J/mol*K]
+    private float current { get; set; }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        Cursor.lockState = CursorLockMode.Locked;   
     }
 
     // Update is called once per frame
@@ -42,12 +45,13 @@ public class Player : MonoBehaviour
         } else if (Input.GetKeyDown(KeyCode.L) == true) {
             Debug.Log("Drawing line");
             ConnectAndDrawLineFirst2SecondObj();
-        }
+        }        
     }
     
 
     //Fixed Update is called once every physic update
-    private void FixedUpdate() {
+    private void FixedUpdate()
+    {
         if (jumpKeyWasPressed) {
             if (!isOnGround) {
                 return; //dont allow air jumps
@@ -75,15 +79,20 @@ public class Player : MonoBehaviour
         isOnGround = false;
     }
 
-    private void ShootPrimaryRay() {
-        Vector3 fwd = Camera.main.transform.forward;//transform.TransformDirection(Vector3.forward);
+    public List<GameObject> getListofConnections()
+    {
+        return connected_lines;
+    }
 
-        
+    private void ShootPrimaryRay()
+    {
+        Vector3 fwd = Camera.main.transform.forward;
         Debug.DrawRay(transform.position, fwd * 10, Color.red, 5);
         RaycastHit hit;
+
         if (Physics.Raycast(Camera.main.transform.position, fwd, out hit, (float) 10)) {
             Debug.Log("There is something in front of the object!");
-            //Debug.Log(hit.collider.GetComponent<Rigidbody>().transform.position);
+            
             Material hit_material = hit.collider.GetComponent<Renderer>().material;
             first_hit_object = hit; //save for future reference
             hit_material.color = Color.magenta;
@@ -91,21 +100,17 @@ public class Player : MonoBehaviour
             Debug.Log("First Ray hit:");
             Debug.Log(first_hit_object_position);
 
-        } else {
-            Debug.Log("Nothing hit!");
         }
-        
-        /* //also works fine!!
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, 100)) {
-            Debug.DrawLine(ray.origin, hit.point);
-        }
-        */
+        else
+        {
+            Debug.Log("Nothing hit!");
+        }      
+       
     }
 
-    private void ShootSecondaryRay() {
+    private void ShootSecondaryRay()
+    {
         Vector3 fwd = Camera.main.transform.forward;//transform.TransformDirection(Vector3.forward);
 
         
@@ -113,7 +118,6 @@ public class Player : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.transform.position, fwd, out hit, (float) 10)) {
             Debug.Log("There is something in front of the object!");
-            //Debug.Log(hit.collider.GetComponent<Rigidbody>().transform.position);
             Material hit_material = hit.collider.GetComponent<Renderer>().material;
             second_hit_object = hit; //save for future reference
             hit_material.color = Color.magenta;
@@ -123,19 +127,11 @@ public class Player : MonoBehaviour
 
         } else {
             Debug.Log("Nothing hit!");
-        }
-        
-        /* //also works fine!!
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, 100)) {
-            Debug.DrawLine(ray.origin, hit.point);
-        }
-        */
+        }    
     }
 
-    private void ConnectAndDrawLineFirst2SecondObj() {
+    private void ConnectAndDrawLineFirst2SecondObj()
+    {
         //Draw Line
         GameObject myLine = new GameObject();
         myLine.transform.position = first_hit_object_position;
@@ -155,60 +151,118 @@ public class Player : MonoBehaviour
 
         lr.SetPosition(0, first_hit_object_position);
         lr.SetPosition(1, second_hit_object_position);
+        Debug.Log("Checking requirements for connection");
         
         
-        if (first_hit_object.collider.GetComponent<ElectricalProperties>() != null && second_hit_object.collider.GetComponent<ElectricalProperties>() != null) { // only if both objects have electrical properties
+        if (first_hit_object.collider.GetComponentInParent<ElectricalComponent>() != null && second_hit_object.collider.GetComponentInParent<ElectricalComponent>() != null)
+        { 
             Debug.Log("Both objects have electrical properties. A connection is valid.");
             myLine.AddComponent<ConnectionInformation>();
-            myLine.GetComponent<ConnectionInformation>().InitializeConnections(first_hit_object, second_hit_object); // attach the object information to the line to be able to retrieve it later
             
             connected_lines.Add(myLine); // add the current line to the connected lines 
-
+            
             InformHUDAboutNewConnectedObjects();
-        } else { // in the case user tries to connect objects without electrical properties
-            Debug.LogWarning("One or more objects do not have electrical properties. A connection is invalid. Deleting in 3 seconds.");
-            GameObject.Destroy(myLine, 3f); //10 seconds duration
+        }
+        else // in the case user tries to connect objects without electrical properties
+        { 
+            Debug.LogWarning("One or more objects is not an Electrical Component. A connection is invalid. Deleting in 3 seconds.");
+            GameObject.Destroy(myLine, 3f); //3 seconds duration
         }
         
         
     }
-    private void InformHUDAboutNewConnectedObjects() {
-        string bat_info = first_hit_object.collider.GetComponent<ElectricalProperties>().PrettyPrintDataSheet();  // battery information will be printed from the first object that was touched. 
+    
+    private void InformHUDAboutNewConnectedObjects()
+    {
+        
         float voltage =  GetVoltageFromConnectedObjects();// calculate the potential difference between two touched objects
-        Debug.Log(bat_info);
-
-        GameObject player_hud_battery_info = GameObject.Find("BatteryInformationText"); // get player HUD for battery info
-        player_hud_battery_info.GetComponent<UpdateHUDtext>().RefreshInfo(bat_info); // update its text
-
+        float resistance = GetResistanceFromConnectedObjects(); //does what it says-omar
+        float current = GetCurrentFromConnectedObjects(); //does what it say
+        
         GameObject player_hud_multimeter = GameObject.Find("MeasuredVoltageText"); // get player HUD for the multimeter
-        player_hud_multimeter.GetComponent<UpdateHUDtext>().RefreshInfo(PrettyPrintThisVoltage(voltage)); // update its text
+        player_hud_multimeter.GetComponent<UpdateHUDtext>().RefreshInfo(PrettyPrintThisInfo(voltage,resistance,current));
+        Debug.Log("U_Reaction = " + ReactionVoltage());// update its text
     }
 
-    private string PrettyPrintThisVoltage(float v) {
-        string output = "Voltage Information\n----------------------------------\n";
-        output += v + " V \n";
-        
+    private string PrettyPrintThisInfo(float voltage, float resistance, float current)
+    {
+        string output = "Circuit\n----------------------------------\n";
+        output += "Voltage: " + voltage + " V \n";
+        output += "Resistance: " + resistance + "Ω \n";
+        output += "Current: " + current + "A \n";
+
         return output;
     }
 
-    private float GetVoltageFromConnectedObjects() {
-        float v1 = first_hit_object.collider.GetComponent<ElectricalProperties>().GetPotential();
-        float v2 = second_hit_object.collider.GetComponent<ElectricalProperties>().GetPotential();
-    /*
-        if (connected_lines[connected_lines.Count-1].GetComponent<ConnectionInformation>().has_same_parent) {
-            v2 = 0; //this is a quick fix to prevent the potential to be subtracted twice from the same battery. Because both "anode" and 
-            //"cathode" have the same methods, they deliver basically the same potential so that when they get substracted from each other (v1-v2) 
-            //they cancel each other out. That is why to prevent substracting the same value from each other, we set the second value (v2) to =0.
-        } else {
-            v2 =  //in the case that the second object we are touching is not
-            //on the same battery, we may consider its potential. 
-            //TODO: is this correct if we are touching the minus pole on the other battery? would we really still measure 
+    private float GetVoltageFromConnectedObjects()
+    {
+        
+        first_hit_object.collider.GetComponentInParent<ElectricalComponent>().Initialize();
+        second_hit_object.collider.GetComponentInParent<ElectricalComponent>().Initialize();
+
+        float v1 = first_hit_object.collider.GetComponentInParent<ElectricalComponent>().GetPotenial();
+        float v2 = second_hit_object.collider.GetComponentInParent<ElectricalComponent>().GetPotenial();
+       
+
+        return v1- v2 ;
+    }
+
+    //returns sum(r_ohm) of connected objects
+    private float GetResistanceFromConnectedObjects()
+    {
+        return first_hit_object.collider.GetComponentInChildren<ElectricalComponent>().GetResistance()
+            + second_hit_object.collider.GetComponent<ElectricalComponent>().GetResistance();
+    }
+
+    
+    public float GetCurrentFromConnectedObjects()
+    {
+        current = GetVoltageFromConnectedObjects() / GetResistanceFromConnectedObjects();
+        Debug.Log("curr = "+current);
+        return current;
+    }
+
+    //calculates Reaction voltage with ButlerVolmer TODO : make this work even if Battery is second_hit_object
+    public float ReactionVoltage()
+    {
+        Debug.Log("curr2 = " + current);
+        Debug.Log("error -1");
+        ElectricalComponent electrolyte;
+        float deltaU;
+        Debug.Log("error 0");
+        if (first_hit_object.collider.GetComponentInParent<ElectricalComponent>().GetComponentType() == 1)       //type 1 is Battery
+        {
+            Debug.Log("error 1");
+            electrolyte = first_hit_object.collider.GetComponentInParent<ElectricalComponent>();
+            Debug.Log("error 2");
         }
-    */
-            
-        Debug.Log("v1 =" + v1.ToString());
-        Debug.Log("v2 =" + v2.ToString());
-        return v1 - v2;
+        else if (second_hit_object.collider.GetComponentInParent<ElectricalComponent>().GetComponentType() == 1)
+        {
+            electrolyte = second_hit_object.collider.GetComponentInParent<ElectricalComponent>();
+        }
+        else
+        {
+            return 0;
+        }
+
+
+        if (Mathf.Abs(current) < 1)
+        { //approximation for small currents
+            deltaU = (R * electrolyte.GetTemp()) / (electrolyte.GetZ() * F) * (current / electrolyte.GetArea() * electrolyte.GetJ());
+        }
+        else
+        { //approximation for large currents
+            float argument = current / (electrolyte.GetArea() * electrolyte.GetJ());
+            deltaU = (((R * electrolyte.GetTemp()) / (electrolyte.GetAlpha() * electrolyte.GetZ() * F))) * Mathf.Log(argument, 2.71f);
+        }
+
+        float IButlerVolmer = electrolyte.GetArea() * electrolyte.GetJ() *
+            (Mathf.Exp((electrolyte.GetAlpha() * electrolyte.GetZ() * F * deltaU) / (R * electrolyte.GetTemp()))
+            - Mathf.Exp((-1) * ((1 - electrolyte.GetAlpha()) * electrolyte.GetZ() * F * deltaU)) / (R * electrolyte.GetTemp()));
+        Debug.Log("Current = "+current);
+        Debug.Log("deltaU = " +deltaU);
+        Debug.Log("IButlerVolmer = " + IButlerVolmer);
+        return (deltaU /IButlerVolmer) * current;
 
     }
 }
