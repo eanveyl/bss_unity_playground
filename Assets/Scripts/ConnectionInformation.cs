@@ -34,4 +34,12 @@ public class ConnectionInformation : MonoBehaviour
         }
         
     }
+
+    public RaycastHit GetFirstHit() {
+        return first_object;
+    }
+
+    public RaycastHit GetSecondHit() {
+        return second_object;
+    }
 }

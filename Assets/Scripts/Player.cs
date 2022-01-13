@@ -207,11 +207,12 @@ public class Player : MonoBehaviour
         return v1- v2 ;
     }
 
-    //returns sum(r_ohm) of connected objects
     private float GetResistanceFromConnectedObjects()
     {
-        return first_hit_object.collider.GetComponentInChildren<ElectricalComponent>().GetResistance()
-            + second_hit_object.collider.GetComponent<ElectricalComponent>().GetResistance();
+        //return first_hit_object.collider.GetComponentInChildren<ElectricalComponent>().GetResistance()
+        //    + second_hit_object.collider.GetComponent<ElectricalComponent>().GetResistance();
+        ResistanceSolver solver = new ResistanceSolver(connected_lines);
+        return solver.LaunchResolveResistance();
     }
 
     
