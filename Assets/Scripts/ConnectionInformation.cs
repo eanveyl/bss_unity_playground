@@ -24,15 +24,7 @@ public class ConnectionInformation : MonoBehaviour
     //broken function, consider removing
     public void InitializeConnections(RaycastHit first, RaycastHit second) {
         first_object = first;
-        second_object = second;
-        if (first_object.collider.GetComponentInParent<ElectricalComponent>().transform.parent.GetInstanceID() == second_object.collider.GetComponentInParent<ElectricalComponent>().transform.parent.GetInstanceID())
-        {
-            has_same_parent = true;
-        }
-        else {
-            has_same_parent = false;
-        }
-        
+        second_object = second;      
     }
 
     public RaycastHit GetFirstHit() {
