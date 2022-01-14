@@ -214,8 +214,7 @@ public class Player : MonoBehaviour
         return v1- v2 ;
     }
 
-    //returns sum(r_ohm) of connected objects
-    private float GetResistanceFromConnectedObjects()
+    private float GetResistanceFromConnectedObjects() //TODO: this takes only the first and second hit object of the current (newest) line. this should be changed to AT LEAST consider the parallel lines. 
     {
         return first_hit_object.collider.GetComponentInChildren<ElectricalComponent>().GetResistance()
             + second_hit_object.collider.GetComponent<ElectricalComponent>().GetResistance();
