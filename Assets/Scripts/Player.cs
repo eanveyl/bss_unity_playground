@@ -158,10 +158,17 @@ public class Player : MonoBehaviour
         { 
             Debug.Log("Both objects have electrical properties. A connection is valid.");
             myLine.AddComponent<ConnectionInformation>();
+            myLine.GetComponent<ConnectionInformation>().InitializeConnections(first_hit_object, second_hit_object);
             
             connected_lines.Add(myLine); // add the current line to the connected lines 
             
-            InformHUDAboutNewConnectedObjects();
+            if (connected_lines[0].GetComponent<ConnectionInformation>().GetFirstHit().collider.GetComponentInParent<ElectricalComponent>().GetComponentType() == 1 && connected_lines[connected_lines.Count-1].GetComponent<ConnectionInformation>().GetSecondHit().collider.GetComponentInParent<ElectricalComponent>().GetComponentType() == 3) {
+                Debug.Log("Connection OK and circuit was closed with ground");
+                InformHUDAboutNewConnectedObjects();
+            } else {
+                Debug.Log("Connection OK but remember to close the circuit (Hint: first hit of the first line is expected to be a battery object and second hit of last line is expected to be ground");
+            }
+            
         }
         else // in the case user tries to connect objects without electrical properties
         { 
