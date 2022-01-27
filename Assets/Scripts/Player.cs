@@ -231,16 +231,11 @@ public class Player : MonoBehaviour
     //calculates Reaction voltage with ButlerVolmer TODO : make this work even if Battery is second_hit_object
     public float ReactionVoltage()
     {
-        Debug.Log("curr2 = " + current);
-        Debug.Log("error -1");
         ElectricalComponent electrolyte;
         float deltaU;
-        Debug.Log("error 0");
         if (first_hit_object.collider.GetComponentInParent<ElectricalComponent>().GetComponentType() == 1)       //type 1 is Battery
         {
-            Debug.Log("error 1");
             electrolyte = first_hit_object.collider.GetComponentInParent<ElectricalComponent>();
-            Debug.Log("error 2");
         }
         else if (second_hit_object.collider.GetComponentInParent<ElectricalComponent>().GetComponentType() == 1)
         {
@@ -250,7 +245,6 @@ public class Player : MonoBehaviour
         {
             return 0;
         }
-
 
         if (Mathf.Abs(current) < 1)
         { //approximation for small currents
@@ -262,13 +256,7 @@ public class Player : MonoBehaviour
             deltaU = (((R * electrolyte.GetTemp()) / (electrolyte.GetAlpha() * electrolyte.GetZ() * F))) * Mathf.Log(argument, 2.71f);
         }
 
-        float IButlerVolmer = electrolyte.GetArea() * electrolyte.GetJ() *
-            (Mathf.Exp((electrolyte.GetAlpha() * electrolyte.GetZ() * F * deltaU) / (R * electrolyte.GetTemp()))
-            - Mathf.Exp((-1) * ((1 - electrolyte.GetAlpha()) * electrolyte.GetZ() * F * deltaU)) / (R * electrolyte.GetTemp()));
-        Debug.Log("Current = "+current);
-        Debug.Log("deltaU = " +deltaU);
-        Debug.Log("IButlerVolmer = " + IButlerVolmer);
-        return (deltaU /IButlerVolmer) * current;
+        return deltaU;
 
     }
 }
